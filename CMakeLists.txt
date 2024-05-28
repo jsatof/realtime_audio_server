@@ -14,8 +14,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTEST REQUIRED gtest)
 
 #set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror -include cstdint")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra -include cstdint")
 
 # for use with clang tidy and clang format
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

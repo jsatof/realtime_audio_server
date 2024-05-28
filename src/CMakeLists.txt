@@ -1,9 +1,10 @@
 set(audio_server_SOURCES
     stub.cpp
+    server/server.cpp
 )
 
 add_executable(audio_server server/main.cpp ${audio_server_SOURCES})
-target_include_directories(audio_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(audio_server PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/server)
 target_link_directories(audio_server PRIVATE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 target_link_libraries(audio_server PRIVATE fmt::fmt)
 
@@ -12,7 +13,7 @@ set(audio_client_SOURCES
 )
 
 add_executable(audio_client client/main.cpp ${audio_client_SOURCES})
-target_include_directories(audio_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(audio_client PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/client)
 target_link_directories(audio_client PRIVATE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 target_link_libraries(audio_client PRIVATE fmt::fmt)
 
@@ -40,7 +41,7 @@ endif()
 
 # Prepend the full path to each source file
 # Create custom target for running clang tidy
-list(TRANSFORM audio_server_SOURCES REPLACE ${CMAKE_SOURCE_DIR}/src/)
+#list(TRANSFORM audio_server_SOURCES REPLACE ${CMAKE_SOURCE_DIR}/src/)
 
 set(CLANG_TIDY_OPTIONS ${CLANG_TIDY_OPTIONS}
     -extra-arg=-Wno-unknown-warning-option
