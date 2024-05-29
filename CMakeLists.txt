@@ -12,10 +12,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 find_package(fmt REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTEST REQUIRED gtest)
+pkg_check_modules(JUCE REQUIRED) # done this way since we just need to use functions from it
 
 #set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror -include cstdint")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra -include cstdint")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror -include cstdint -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra -include cstdint -fdiagnostics-color=always")
 
 # for use with clang tidy and clang format
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

@@ -4,7 +4,10 @@ set(audio_server_SOURCES
 )
 
 add_executable(audio_server server/main.cpp ${audio_server_SOURCES})
-target_include_directories(audio_server PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/server)
+target_include_directories(audio_server PRIVATE
+	${PROJECT_SOURCE_DIR}/src
+	${PROJECT_SOURCE_DIR}/src/util
+	${PROJECT_SOURCE_DIR}/src/server)
 target_link_directories(audio_server PRIVATE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 target_link_libraries(audio_server PRIVATE fmt::fmt)
 
@@ -13,9 +16,12 @@ set(audio_client_SOURCES
 )
 
 add_executable(audio_client client/main.cpp ${audio_client_SOURCES})
-target_include_directories(audio_client PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/client)
+target_include_directories(audio_client PRIVATE
+	${PROJECT_SOURCE_DIR}/src
+	${PROJECT_SOURCE_DIR}/src/util
+	${PROJECT_SOURCE_DIR}/src/client)
 target_link_directories(audio_client PRIVATE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-target_link_libraries(audio_client PRIVATE fmt::fmt)
+target_link_libraries(audio_client PRIVATE fmt::fmt ${JUCE_LIBRARIES})
 
 if (UNIX)
     target_link_libraries(audio_server PRIVATE dl pthread m)
@@ -35,7 +41,7 @@ if (BUILD_TESTS)
     add_library(audio_client_shared SHARED ${audio_server_SOURCES})
     target_include_directories(audio_client_shared PRIVATE ${PROJECT_SOURCE_DIR}/src)
     target_link_directories(audio_client_shared PRIVATE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-    target_link_libraries(audio_client_shared PRIVATE fmt::fmt)
+    target_link_libraries(audio_client_shared PRIVATE fmt::fmt ${JUCE_LIBRARIES})
     install(TARGETS audio_client_shared LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 endif()
 

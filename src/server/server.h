@@ -8,33 +8,37 @@ namespace javelin {
 
 class Server {
 public:
-	constexpr bool init();
-	bool start();
-	bool stop();
+	int8_t start() const;
+	int8_t stop() const;
 
 	//javelin::Allocator arena;
 	//javelin::Allocator start_lifetime;
 
-	uint32_t port;
-	uint32_t socket;
-	uint32_t next_client_id;
-	uint8_t context;
+	// TODO: 'mutable' is a hack, probably should be in a constructor
+	uint32_t mutable port;
+	uint32_t mutable next_client_id;
+	uint8_t mutable context;
+	int32_t mutable socket_fd;
 
 	//std::vector<Client> clients;
 	//std::vector<Client> client_remove_queue;
 
-	std::atomic<bool> ready;
-	std::atomic<bool> quit;
-	std::atomic<bool> paused;
+	std::atomic<bool> mutable ready;
+	std::atomic<bool> mutable quit;
+	std::atomic<bool> mutable paused;
 
-	std::mutex mutex;
-	std::thread thread;
+	std::mutex mutable mutex; // locked whenever this object's state is modified
+	std::thread mutable thread;
 
 	const char error[256];
 
 	//Ticker tick;
 	//Session session;
 	//std::vector<Packet> packets;
+
+private:
+	void init() const;
+	void create_session();
 };
 
 }
