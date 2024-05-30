@@ -6,6 +6,8 @@
 
 namespace javelin {
 
+int server_main();
+
 class Server {
 public:
 	int8_t start() const;

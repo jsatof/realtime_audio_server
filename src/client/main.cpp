@@ -1,11 +1,18 @@
+#include <client/client.h>
+
 #include <fmt/core.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 
+#include <opus.h>
+#include <opusfile.h>
+
 #include <string>
 
-int main() {
+namespace javelin {
+
+int client_main() {
 	const uint32_t port = 34345;	
 	const char *message = "Scooby Doo";
 
@@ -36,8 +43,13 @@ int main() {
 		return 1;
 	}
 
+
 	fmt::print("Received message from server: {}\n", buffer);
 
 
 	close(client_socket);
+
+	return 0;
+}
+
 }

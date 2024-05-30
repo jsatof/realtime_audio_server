@@ -1,15 +1,16 @@
+#include <server/server.h>
+
 #include <fmt/core.h>
-
-//#include <server.h>
-
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <sys/socket.h>
 #include <vector>
 
 // do everything in main.cpp, generalize later
 // we're gonna listen on hardcoded port 34345
 // and ping pong
+
+namespace javelin {
 
 static uint32_t next_client_id = 0;
 
@@ -134,13 +135,11 @@ int main() {
 		update(client_list);
 
 
-
-
-
 	}
 
-
-
-
 	close(server_socket);
+
+	return 0;
+}
+
 }
