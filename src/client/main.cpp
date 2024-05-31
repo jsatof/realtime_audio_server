@@ -1,4 +1,5 @@
 #include <client/client.h>
+#include <ring_buffer.h>
 
 #include <fmt/core.h>
 #include <sys/socket.h>
@@ -10,46 +11,56 @@
 #include <SDL2/SDL.h>
 
 #include <string>
+#include <vector>
 
 namespace javelin {
 
-float audio_buffer[2048];
-int audio_offset = 0;
-float volume = 0.4f;
-
-void audio_callback(void *, uint8_t *stream, int length) {
-	SDL_memset(stream, length, 0);
-
-	SDL_memcpy(stream, audio_buffer + audio_offset, length);
-	audio_offset += length;
-	audio_offset %= 2048;
-}
-
-void play_audio(const SDL_AudioSpec &spec) {
-	// TODO: maybe make a client argument or file chooser and check path validity
-	const char *path = "bets_are_off.opus"; // have to run from project root
-
+void populate_samples(const std::string &path) {
 	int opus_error;
-	OggOpusFile *file = op_open_file(path, &opus_error);
+	OggOpusFile *file = op_open_file(path.c_str(), &opus_error);
 	if (opus_error) {
 		fmt::print(stderr, "ERROR: Could not open OggOpusFile\n");
 		return;
 	}
 
 	size_t samples_left = op_pcm_total(file, -1); // use a negative _li value to read the whole stream length
-	fmt::print("status: Sample rate {}\n", spec.freq);
+	size_t sample_counter = 0;
+
+	float load_buffer[2048];
 
 	while (samples_left > 0) {
-		uint32_t samples_read = op_read_float(file, audio_buffer, sizeof(audio_buffer) * sizeof(audio_buffer[0]), NULL);
+		const uint32_t samples_read = op_read_float_stereo(file, load_buffer, sizeof(load_buffer) * sizeof(load_buffer[0]));
 		samples_left -= samples_read;
-		fmt::print("status: {} samples read\n", samples_read);
+		sample_counter += samples_read;
 
-		uint32_t wait_time = float(samples_read) / (float(spec.freq) / 1000.f);
-		fmt::print("status: waiting {}ms\n", wait_time);
-		SDL_Delay(wait_time);
+		// TODO: load these chunks into the buffer
+
+		fmt::print("status: {} samples read\n", samples_read);
 	}
 
 	op_free(file);
+}
+
+void audio_callback(void *, uint8_t *stream, int stream_length) {
+	std::vector<float> samples;
+	if (samples.size() == 0) {
+		return;
+	}
+
+	uint32_t length = std::min(uint32_t(stream_length), uint32_t(samples.size()));
+
+	SDL_memcpy(stream, samples.data(), length);
+	//audio_buffer->data += 1;
+	//audio_buffer->length -= length;
+}
+
+void play_audio(float *, const SDL_AudioSpec &) {
+	// TODO: maybe make a client argument or file chooser and check path validity
+	//const char *path = "bets_are_off.opus"; // have to run from project root
+
+
+
+
 }
 
 int client_main() {
@@ -68,6 +79,7 @@ int client_main() {
 		return 1;
 	}
 
+
 // SDL doesnt want its user to fill the missing fields
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 	SDL_AudioSpec obtained_spec;
@@ -83,7 +95,7 @@ int client_main() {
 
 	SDL_AudioDeviceID audio_device = SDL_OpenAudioDevice(NULL, false, &requested_spec, &obtained_spec, SDL_AUDIO_ALLOW_ANY_CHANGE);
 	SDL_PauseAudioDevice(audio_device, false);
-	play_audio(obtained_spec);
+	play_audio(nullptr, obtained_spec);
 
 	if (connect(client_socket, (struct sockaddr*)&address, sizeof(address))) {
 		fmt::print(stderr, "ERROR: failled to connect to socket\n");
@@ -105,15 +117,13 @@ int client_main() {
 		return 1;
 	}
 
-
 	fmt::print("Received message from server: {}\n", buffer);
 
-
 	close(client_socket);
-
+	SDL_CloseAudioDevice(audio_device);
 	SDL_Quit();
-
 	return 0;
 }
+
 
 }

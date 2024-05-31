@@ -2,7 +2,8 @@ set(audio_server_SOURCES
 	server/main.cpp)
 
 set(audio_client_SOURCES
-	client/main.cpp)
+	client/main.cpp
+	ring_buffer.cpp)
 
 add_executable(realtime_audio_mixer main.cpp ${audio_server_SOURCES} ${audio_client_SOURCES})
 target_include_directories(realtime_audio_mixer PRIVATE
