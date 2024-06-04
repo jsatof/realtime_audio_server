@@ -39,7 +39,7 @@ void populate_samples(const std::string &path) {
 		fmt::print("status: {} samples read\n", samples_read);
 	}
 
-	fmt::print("status: Samples Read: {}\n", samples_counter);
+	fmt::print("status: Samples Read: {}\n", sample_counter);
 
 	op_free(file);
 }

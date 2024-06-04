@@ -3,6 +3,7 @@
 #include <array>
 #include <iterator>
 #include <vector>
+#include <span>
 
 namespace javelin {
 
@@ -13,15 +14,13 @@ public:
 	RingBuffer();
 
 	void write(float *input, const size_t size);
-	void read(float *output, const size_t size);
+	std::span<float> read();
 
-	void print();
 	size_t head;
 	size_t tail;
+
 	const size_t size;
 	std::vector<float> buffer;
-
-private:
 };
 
 }
