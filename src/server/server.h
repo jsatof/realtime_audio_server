@@ -6,7 +6,7 @@
 
 namespace javelin {
 
-int server_main();
+void server_main();
 
 class Server {
 public:

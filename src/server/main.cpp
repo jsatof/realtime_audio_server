@@ -34,14 +34,14 @@ void update(const std::vector<MyClient>& clients) {
 	}
 }
 
-int main() {
+void server_main() {
 	uint32_t port = 34345;
 	const uint32_t MAX_PENDING = 3;
 	
 	int32_t server_socket = socket(PF_INET, SOCK_STREAM, 0);
 	if (server_socket == -1) {
 		fmt::print(stderr, "ERROR: failed to create server socket\n");
-		return 1;
+		return;
 	}
 
 	struct sockaddr_in address = {};
@@ -51,7 +51,7 @@ int main() {
 
 	if (bind(server_socket, (struct sockaddr*)&address, sizeof(address))) {
 		fmt::print(stderr, "ERROR: failed to bind socket\n");
-		return 1;
+		return;
 	}
 
 	socklen_t address_length = sizeof(address);
@@ -60,7 +60,7 @@ int main() {
 
 	if (listen(server_socket, MAX_PENDING)) {
 		fmt::print(stderr, "ERROR: failed to listen\n");
-		return 1;
+		return;
 	}
 
 	struct sockaddr_storage client_address;
@@ -139,7 +139,6 @@ int main() {
 
 	close(server_socket);
 
-	return 0;
 }
 
 }
