@@ -17,8 +17,8 @@ pkg_check_modules(OPUSFILE REQUIRED opusfile)
 pkg_check_modules(SDL2 REQUIRED sdl2)
 
 #set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror -include cstdint -fdiagnostics-color=always")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra -include cstdint -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Og -Wall -Wextra -Werror -include cstddef -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Werror -Wall -Wextra -include cstddef -fdiagnostics-color=always")
 
 # for use with clang tidy and clang format
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
