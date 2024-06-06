@@ -47,6 +47,11 @@ TEST(AudioServerTestSuite, RingBufferFullWriteTest) {
 	size_t right_size = ring_buffer.size - ring_buffer.head;
 	size_t left_size = ring_buffer.tail;
 	ASSERT_EQ(right_size + left_size, sizeof(dummy_data));
+
+	float read_test_data[2048];
+	ring_buffer.read(read_test_data);
+	ASSERT_EQ(dummy_data[0], read_test_data[0]);
+	ASSERT_EQ(dummy_data[2047], read_test_data[2047]);
 }
 
 int main(int argc, char **argv) {
