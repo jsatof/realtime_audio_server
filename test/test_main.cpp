@@ -30,9 +30,23 @@ TEST(AudioServerTestSuite, RingBufferLoopbackTest) {
 	float dummy_data[12];
 	ring_buffer.write(dummy_data, sizeof(dummy_data));
 	ASSERT_TRUE(ring_buffer.head = 12280);
-	ASSERT_TRUE(ring_buffer.tail == 4);
+	ASSERT_TRUE(ring_buffer.tail == 40);
+}
 
+TEST(AudioServerTestSuite, RingBufferFullWriteTest) {
+	auto ring_buffer = javelin::RingBuffer();
+	float dummy_data[2048];
 
+	size_t loop_count = (ring_buffer.size / sizeof(dummy_data)) + 1; // +1 for wanting the loopback to happen
+	for (size_t i = 0; i < loop_count; ++i) {
+		ring_buffer.write(dummy_data, sizeof(dummy_data));
+	}
+
+	ASSERT_TRUE(ring_buffer.head > ring_buffer.tail);
+
+	size_t right_size = ring_buffer.size - ring_buffer.head;
+	size_t left_size = ring_buffer.tail;
+	ASSERT_EQ(right_size + left_size, sizeof(dummy_data));
 }
 
 int main(int argc, char **argv) {

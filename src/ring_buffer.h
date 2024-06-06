@@ -12,6 +12,7 @@ namespace javelin {
 class RingBuffer {
 public:
 	RingBuffer();
+	~RingBuffer();
 
 	void write(float *input, const size_t size);
 	std::span<float> read();
